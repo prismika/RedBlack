@@ -8,7 +8,7 @@ CFLAGS = -Wall -ggdb3
 CPPFLAGS = -Wall -ggdb3 -lpthreads
 
 BIN = redBlackTest
-OBJS = redBlackTest.o redBlack.o parser.o
+OBJS = redBlackTest.o redBlack.o parser.o treeBuilder.o
 
 all: $(BIN)
 

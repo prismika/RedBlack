@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include "redBlack.h"
+#include "treeBuilder.h"
 #include <vector>
 #include <string>
 
@@ -30,6 +31,7 @@ private:
 	int read_threads = 0;
 	int write_threads = 0;
 	vector<Job> jobs;
+	TreeBuilder tree_builder;
 public:
 	int parse(string filename);
 	vector<Job> get_jobs();

@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "redBlack.h"
+#include "treeBuilder.h"
 #include <string>
 #include <iostream>
 
@@ -45,28 +46,37 @@ string Job::to_string(){
 //---------------------------------------
 int Parser::parse(string filename){
 	cout << "Parsing " << filename << "..." << endl;
+		
+	//Parse tree description
+	string preorder = "fake";
+	tree = tree_builder.string_to_tree(preorder);
+
+	//Parse thread counts
+	read_threads = 3;
+	write_threads = 2;
+
+	//Parse jobs
+	Job *j1 = new Job();
+	jobs.push_back(*j1);
+	Job *j2 = new Job();
+	jobs.push_back(*j2);
+
 	return 0;
 }
 
 vector<Job> Parser::get_jobs(){
-	vector<Job> ret;
-	Job j1;
-	ret.push_back(j1);
-	Job j2;
-	ret.push_back(j2);
-	return ret;
+	return jobs;
 }
 
 int Parser::get_num_readers(){
-	return 3;
+	return read_threads;
 }
 
 int Parser::get_num_writers(){
-	return 2;
+	return write_threads;
 }
 
 RedBlack * Parser::get_tree(){
-	RedBlack * tree = new RedBlack();
 	return tree;
 }
 
