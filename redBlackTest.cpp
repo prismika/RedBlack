@@ -3,6 +3,7 @@
 #include <queue>
 #include "redBlack.h"
 #include "parser.h"
+#include "reportWriter.h"
 
 using namespace std;
 
@@ -13,15 +14,47 @@ queue<Job> readers_queue, writers_queue;
 
 RedBlack *tree;
 Parser parser;
-/*
 ReportWriter report_writer;
-*/
+
 
 
 void bad_usage(void){
 	cout << "Incorrect usage" << endl;
 	return;
 }
+
+int run_job(Job job){
+	switch(job.get_action()){
+		case job_search:
+		return tree->search(job.get_key());
+		case job_insert:
+		return tree->insert(job.get_key());
+		case job_remove:
+		return tree->remove(job.get_key());
+	}
+	return -2;
+}
+
+int reader_main(){
+	while(!readers_queue.empty()){
+		Job current_job = readers_queue.front();
+		readers_queue.pop();
+		int status = run_job(current_job);
+		report_writer.report_job(current_job, (status == 0), 0);
+	}
+	return 0;
+}
+
+int writer_main(){
+	while(!writers_queue.empty()){
+		Job current_job = writers_queue.front();
+		writers_queue.pop();
+		int status = run_job(current_job);
+		report_writer.report_job(current_job, (status == 0), 0);
+	}
+	return 0;
+}
+
 
 
 int main(int argc, char *argv[]){
@@ -55,16 +88,24 @@ int main(int argc, char *argv[]){
 			//Queue in writers queue
 		}
 	}
-	/*
-	long start_time = time();
 
+	// long start_time = time();
+
+	reader_main();
+
+	writer_main();
+/*
 	pthreads_set_threads_loose();
 
 	pthreads_wait_for_kids();
+*/
+	// long end_time = time();
 
-	long end_time = time();
+	// report_writer.report_time(end_time - start_time);
 
-	report_writer.output_report(&tree,end_time - start_time);
-	*/
+	report_writer.report_tree(tree);
+
+	report_writer.print_report();
+	
 	return 0;
 }
