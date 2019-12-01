@@ -8,19 +8,19 @@ CFLAGS = -Wall -ggdb3
 CPPFLAGS = -Wall -ggdb3 -lpthreads
 
 BIN = redBlackTest
-OBJS = redBlackTest.o
+OBJS = redBlackTest.o redBlack.o
 
 all: $(BIN)
 
 $(BIN): $(OBJS) redBlackTest.o
 	@$(ECHO) Linking $@
-	@g++ $^ -o $@ -Wall -ggdb3
+	$(CXX) $^ -o $@ -Wall -ggdb3
 
 -include $(OBJS:.o=.d)
 
-%.cpp.o: %.cpp %.h
+%.o: %.cpp %.h
 	@$(ECHO) Compiling $<
-	@g++ -Wall -ggdb3 -MMD -MF $*.d -c $<
+	$(CXX) -Wall -ggdb3 -MMD -MF $*.d -c $<
 
 #Clean up!
 clean:

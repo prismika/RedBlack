@@ -1,5 +1,5 @@
-
 #include <iostream>
+#include "redBlack.h"
 
 using namespace std;
 
@@ -8,8 +8,10 @@ int write_threads = 0;
 /*
 vector<Job> jobs;
 queue<Job> readers_queue, writers_queue;
+*/
 
 RedBlack tree;
+/*
 Parser parser;
 ReportWriter report_writer;
 */
@@ -24,7 +26,9 @@ void bad_usage(void){
 int main(int argc, char *argv[]){
 	if(argc != 2){
 		bad_usage();
+		return;
 	}
+
 	/*
 	//TODO Process input string a bit for current directory stuff
 	parser.parse(argv[1]);
