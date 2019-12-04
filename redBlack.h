@@ -1,6 +1,6 @@
 #ifndef REDBLACK_H
 #define REDBLACK_H
-
+#include<pthread.h>
 
 class RedBlackNode{
 private:
@@ -12,6 +12,8 @@ private:
 class RedBlack{
 private:
 	RedBlackNode root;
+	pthread_mutex_t reader_mutex;
+	pthread_mutex_t writer_mutex;
 public:
 	RedBlack();
 	int search(int key);

@@ -5,7 +5,7 @@ RM = rm
 TAR = tar cvfz
 
 CFLAGS = -Wall -ggdb3
-CPPFLAGS = -Wall -ggdb3 -lpthreads
+CPPFLAGS = -Wall -ggdb3 -lpthread
 
 BIN = redBlackTest
 OBJS = redBlackTest.o redBlack.o parser.o treeBuilder.o reportWriter.o
