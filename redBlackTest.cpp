@@ -79,13 +79,14 @@ int main(int argc, char *argv[]){
 		// pthread_create(blahblahblah writer_main);
 	}
 
+	//Sort jobs into necessary queues
 	for(vector<Job>::iterator iter = jobs.begin(); iter != jobs.end(); iter++){
 		if(iter->get_action() == job_search){
 			cout << "Placing job: " << iter->to_string() << " in reader queue." << endl;
-			//Queue in reader queue
+			readers_queue.push(*iter);
 		}else{
 			cout << "Placing job: " << iter->to_string() << " in writer queue." << endl;
-			//Queue in writers queue
+			writers_queue.push(*iter);
 		}
 	}
 

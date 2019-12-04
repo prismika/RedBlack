@@ -20,6 +20,7 @@ private:
 	int key;
 public:
 	Job();
+	Job(JobAction action, int key);
 	JobAction get_action();
 	int get_key();
 	string to_string();

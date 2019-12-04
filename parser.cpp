@@ -15,6 +15,10 @@ Job::Job(){
 	this->key = 64;
 }
 
+Job::Job(JobAction action, int key)
+	:action(action), key(key)
+{}
+
 JobAction Job::get_action(){
 	return this->action;
 }
@@ -56,10 +60,12 @@ int Parser::parse(string filename){
 	write_threads = 2;
 
 	//Parse jobs
-	Job *j1 = new Job();
-	jobs.push_back(*j1);
-	Job *j2 = new Job();
-	jobs.push_back(*j2);
+	Job j1(job_insert,12);
+	jobs.push_back(j1);
+	Job j2(job_remove,13);
+	jobs.push_back(j2);
+	Job j3(job_search,14);
+	jobs.push_back(j3);
 
 	return 0;
 }
