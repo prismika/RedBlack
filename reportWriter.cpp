@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <pthread.h>
 #include "parser.h"
 
 using namespace std;
@@ -27,7 +28,11 @@ string CompletedJob::to_string(){
 
 int ReportWriter::report_job(Job job, bool success, int thread){
 	CompletedJob new_job(job,success,thread);
+
+	pthread_mutex_lock(&report_submit_mutex);
 	completed_jobs.push_back(new_job);
+	cout << "Job reported: " << new_job.to_string() << endl;
+	pthread_mutex_unlock(&report_submit_mutex);
 	return 0;
 }
 

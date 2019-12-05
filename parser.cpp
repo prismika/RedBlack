@@ -56,18 +56,28 @@ int Parser::parse(string filename){
 	tree = tree_builder.string_to_tree(preorder);
 
 	//Parse thread counts
-	read_threads = 3;
-	write_threads = 2;
+	read_threads = 4;
+	write_threads = 4;
 
 	//Parse jobs
-	Job j1(job_insert,12);
+	Job j1(job_insert,1);
 	jobs.push_back(j1);
-	Job j2(job_remove,13);
+	Job j2(job_remove,2);
 	jobs.push_back(j2);
-	Job j3(job_search,14);
+	Job j3(job_search,3);
 	jobs.push_back(j3);
-	Job j4(job_search,12);
+	Job j4(job_search,4);
 	jobs.push_back(j4);
+	Job j5(job_insert,5);
+	jobs.push_back(j5);
+	Job j6(job_insert,6);
+	jobs.push_back(j6);
+	Job j7(job_remove,7);
+	jobs.push_back(j7);
+	Job j8(job_search,8);
+	jobs.push_back(j8);
+	Job j9(job_search,9);
+	jobs.push_back(j9);
 
 	return 0;
 }

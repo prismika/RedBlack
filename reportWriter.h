@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <pthread.h>
 #include "parser.h"
 #include "redBlack.h"
 
@@ -23,6 +24,8 @@ private:
 	vector<CompletedJob> completed_jobs;
 	long time;
 	RedBlack *tree;
+	pthread_mutex_t report_submit_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 public:
 	int report_job(Job job, bool success, int thread);
 	int report_time(long time);

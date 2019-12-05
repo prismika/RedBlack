@@ -14,7 +14,7 @@ all: $(BIN)
 
 $(BIN): $(OBJS) redBlackTest.o
 	@$(ECHO) Linking $@
-	$(CXX) $^ -o $@ -Wall -ggdb3
+	$(CXX) $^ -o $@ -Wall -ggdb3 -lpthread
 
 -include $(OBJS:.o=.d)
 

@@ -21,8 +21,4 @@ public:
 	int remove(int key);
 };
 
-
-
-
-
 #endif
