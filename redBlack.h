@@ -12,8 +12,14 @@ private:
 class RedBlack{
 private:
 	RedBlackNode root;
-	pthread_mutex_t reader_mutex;
-	pthread_mutex_t writer_mutex;
+	pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_cond_t writer_wait = PTHREAD_COND_INITIALIZER;
+	pthread_cond_t reader_wait = PTHREAD_COND_INITIALIZER;
+	int writers_writing = 0;
+	int readers_reading = 0;
+	int readers_waiting = 0;
+	void before_write();
+	void after_write();
 public:
 	RedBlack();
 	int search(int key);
