@@ -7,6 +7,149 @@ using namespace std;
 
 RedBlack::RedBlack(){
 	cout << "Creating a red black tree." << endl;
+	root = NULL;
+}
+
+//----------------------------------
+//	Private functions
+//----------------------------------
+
+RedBlackNode *RedBlack::parent_of(RedBlackNode* node){
+	if(node == NULL){
+		return NULL;
+	}else{
+		return node->parent;
+	}
+}
+
+RedBlackNode *RedBlack::sibling_of(RedBlackNode* node){
+	RedBlackNode *parent = parent_of(node);
+	if(parent == NULL) return NULL;
+	//If node is a left_child
+	if(node == parent->left_child){
+		//return the right_child
+		return parent->right_child;
+	}else{
+		//Otherwise return the left_child
+		return parent->left_child;
+	}
+}
+
+void RedBlack::rotate_left(RedBlackNode *node){
+	RedBlackNode *parent = parent_of(node);
+	RedBlackNode *replacement = node->right_child;
+	
+	//Replace appropriate pointers
+	node->right_child = replacement->left_child;
+	replacement->left_child = node;
+	node->parent = replacement;
+	if(node->right_child){
+		node->right_child->parent = node;
+	}
+	if(parent){
+		if(node == parent->left_child){
+			parent->left_child = replacement;
+		}else{
+			parent->right_child = replacement;
+		}
+	}
+	replacement->parent = parent;
+}
+
+void RedBlack::rotate_right(RedBlackNode *node){
+	RedBlackNode *parent = parent_of(node);
+	RedBlackNode *replacement = node->left_child;
+	
+	//Replace appropriate pointers
+	node->left_child = replacement->right_child;
+	replacement->right_child = node;
+	node->parent = replacement;
+	if(node->left_child){
+		node->left_child->parent = node;
+	}
+	if(parent){
+		if(node == parent->right_child){
+			parent->right_child = replacement;
+		}else{
+			parent->left_child = replacement;
+		}
+	}
+	replacement->parent = parent;
+}
+
+void RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
+	//If root is not a leaf and root's key is too large
+	if(root && node->key < root->key){
+		//If root has a left child
+		if(root->left_child){
+			//recurse on that child
+			insert_recurse(root->left_child,node);
+			return;
+		}else{//if not,
+			//it has one now
+			root->left_child = node;
+		}
+	//If root is not a leaf but it's key is not too large,
+	}else if(root){
+		//If root has a right child
+		if(root->right_child){
+			//recurse on that child
+			insert_recurse(root->right_child,node);
+			return;
+		}else{
+			root->right_child = node;
+		}
+	}
+	//Node is attached. Set its pointers
+	node->parent = root;
+	node->left_child = NULL; //No children for now
+	node->right_child = NULL;
+	node->red = true; //Red for now
+}
+
+void RedBlack::insert_repair(RedBlackNode *node){
+	//If node is root
+	if(parent_of(node)==NULL){					//Case 1
+		node->red = false; //Root is black
+	//If node has black parent
+	}else if(!parent_of(node)->red){			//Case 2
+		return;	//All is well
+	//If node has a red uncle
+	}else if(  sibling_of(parent_of(node))
+			&& sibling_of(parent_of(node))->red){//Case 3
+		//color parent and uncle black
+		parent_of(node)->red = false;
+		sibling_of(parent_of(node))->red = false;
+		//Color grandparent red
+		parent_of(parent_of(node))->red = true;
+		//Repair the grandparent
+		insert_repair(parent_of(parent_of(node)));
+	}else{//Node has red parent, no red uncle	//Case 4
+		//Things get a bit complicated
+		RedBlackNode* parent = parent_of(node);
+		RedBlackNode* grandparent = parent_of(parent);
+		//If node is "under" grandparent
+		if(node == parent->right_child
+			&& parent == grandparent->left_child){
+			rotate_left(parent);
+			node = node->left_child;
+		}else if(node == parent->left_child
+			&& parent == grandparent->right_child){
+			rotate_right(parent);
+			node = node->right_child;
+		}
+		//Now we know node is not "under" its grandparent
+		//We might have reordered the tree, so set these again
+		parent = parent_of(node);
+		grandparent = parent_of(parent);
+		if(node == parent->left_child){
+			rotate_right(grandparent);
+		}else{
+			rotate_left(grandparent);
+		}
+		parent->red = false;
+		grandparent->red = true;
+	}
 }
 
 //----------------------------------
@@ -66,8 +209,22 @@ void RedBlack::after_write(){
 int RedBlack::insert(int key){
 	before_write();
 
-	// cout << "M: Insert" << endl;
-	sleep(1);
+	RedBlackNode *new_node = new RedBlackNode();
+	new_node->key = key;
+	new_node->left_child = NULL;
+	new_node->right_child = NULL;
+	new_node->parent = NULL;
+	new_node->red = true;
+
+	insert_recurse(this->root, new_node);
+
+	insert_repair(new_node);
+	//The root might have changed which would be a disaster
+	RedBlackNode *cur_node = new_node;
+	while(parent_of(cur_node)){
+		cur_node = parent_of(cur_node);
+	}
+	this->root = cur_node;
 
 	after_write();
 	return 0;
