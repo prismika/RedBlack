@@ -68,7 +68,7 @@ int Parser::parse(string filename){
 	jobs.push_back(j3);
 	Job j4(job_insert,4);
 	jobs.push_back(j4);
-	Job j5(job_insert,5);
+	Job j5(job_insert,1);
 	jobs.push_back(j5);
 
 	Job j6(job_search,1);

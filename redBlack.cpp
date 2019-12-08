@@ -77,14 +77,14 @@ void RedBlack::rotate_right(RedBlackNode *node){
 	replacement->parent = parent;
 }
 
-void RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
+int RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
+	if(node->key == root->key) return -1;
 	//If root is not a leaf and root's key is too large
 	if(root && node->key < root->key){
 		//If root has a left child
 		if(root->left_child){
 			//recurse on that child
-			insert_recurse(root->left_child,node);
-			return;
+			return insert_recurse(root->left_child,node);
 		}else{//if not,
 			//it has one now
 			root->left_child = node;
@@ -94,8 +94,7 @@ void RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
 		//If root has a right child
 		if(root->right_child){
 			//recurse on that child
-			insert_recurse(root->right_child,node);
-			return;
+			return insert_recurse(root->right_child,node);
 		}else{
 			root->right_child = node;
 		}
@@ -105,6 +104,7 @@ void RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
 	node->left_child = NULL;
 	node->right_child = NULL;
 	node->red = true; //Red for now
+	return 0;
 }
 
 void RedBlack::insert_repair(RedBlackNode *node){
@@ -229,18 +229,20 @@ int RedBlack::insert(int key){
 	new_node->parent = NULL;
 	new_node->red = true;
 
-	insert_recurse(this->root, new_node);
-
-	insert_repair(new_node);
-	//The root might have changed which would be a disaster
-	RedBlackNode *cur_node = new_node;
-	while(parent_of(cur_node)){
-		cur_node = parent_of(cur_node);
+	int insert_status = insert_recurse(this->root, new_node);
+	if(insert_status == 0){
+		//Node did not already exist. Tree was edited
+		insert_repair(new_node);
+		//The root might have changed which would be a disaster
+		RedBlackNode *cur_node = new_node;
+		while(parent_of(cur_node)){
+			cur_node = parent_of(cur_node);
+		}
+		this->root = cur_node;
 	}
-	this->root = cur_node;
 
 	after_write();
-	return 0;
+	return insert_status;
 }
 
 int RedBlack::remove(int key){

@@ -24,7 +24,7 @@ private:
 	void rotate_right(RedBlackNode *node);
 	void before_write();
 	void after_write();
-	void insert_recurse(RedBlackNode *root, RedBlackNode *node);
+	int insert_recurse(RedBlackNode *root, RedBlackNode *node);
 	void insert_repair(RedBlackNode *node);
 	bool search_recurse(RedBlackNode *root, int key);
 	friend class TreeBuilder;

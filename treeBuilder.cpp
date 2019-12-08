@@ -99,6 +99,7 @@ void TreeBuilder::tree_to_string_recurse(string* str, RedBlackNode* root){
 string TreeBuilder::tree_to_string(RedBlack *tree){
 	string ret = "";
 	tree_to_string_recurse(&ret,tree->root);
+	//Clip trailing comma
 	ret = ret.substr(0,ret.size()-1);
 	return ret;
 }
