@@ -26,6 +26,7 @@ private:
 	void after_write();
 	void insert_recurse(RedBlackNode *root, RedBlackNode *node);
 	void insert_repair(RedBlackNode *node);
+	bool search_recurse(RedBlackNode *root, int key);
 public:
 	RedBlack();
 	int search(int key);

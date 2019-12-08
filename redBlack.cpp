@@ -152,6 +152,18 @@ void RedBlack::insert_repair(RedBlackNode *node){
 	}
 }
 
+bool RedBlack::search_recurse(RedBlackNode *root, int key){
+	if(!root){
+		return false;
+	}
+	if(root->key == key){
+		return true;
+	}else{
+		return search_recurse(root->left_child, key)
+		|| search_recurse(root->right_child, key);
+	}
+}
+
 //----------------------------------
 //	Reader operations
 //----------------------------------
@@ -164,17 +176,18 @@ int RedBlack::search(int key){
 	}
 	readers_reading++;
 	pthread_mutex_unlock(&mutex);
+	//------End of multithreading stuff-------
+	
+	bool result = search_recurse(this->root, key);
 
-	// cout << "Search" << endl;
-	sleep(1);
-
+	//------End of multithreading stuff-------
 	pthread_mutex_lock(&mutex);
 	readers_reading--;
 	if(readers_reading == 0){
 		pthread_cond_signal(&writer_wait);
 	}
 	pthread_mutex_unlock(&mutex);
-	return 0;
+	return result ? 0 : 1;
 }
 
 //----------------------------------
