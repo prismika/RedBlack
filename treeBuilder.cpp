@@ -46,6 +46,7 @@ RedBlack *TreeBuilder::string_to_tree(string str){
 	size_t new_str_position = 0;
 	queue<RedBlackNode*> node_queue;
 
+	//Fill the queue with nodes
 	while(new_str_position != string::npos){
 		//Parse the next token
 		new_str_position = str.find(",", str_position);
@@ -70,41 +71,12 @@ RedBlack *TreeBuilder::string_to_tree(string str){
 			cout << "Constructed null node." << endl;
 		}
 		node_queue.push(new_node);
-
-
-
-		//Place the new node
-		//If this is the first node
-
-		// if(!cur_node){
-		// 	cout << "Placing first node" << endl;
-		// 	tree->root = new_node;
-		// 	just_put_null_node_on_left = false;
-		// 	cur_node = stack.top();
-		// 	stack.pop();
-		// }else if(just_put_null_node_on_left || cur_node->left_child != NULL){
-		// 	cout << "Putting new node on right." << endl;
-		// 	cur_node->right_child = new_node;
-		// 	just_put_null_node_on_left = false;
-		// 	cur_node = stack.top();
-		// 	stack.pop();
-		// }else{
-		// 	cout << "Putting new node on left." << endl;
-		// 	cur_node->left_child = new_node;
-		// 	just_put_null_node_on_left = (new_node == NULL);
-		// }
-
 	}
 
 	tree -> root = node_queue.front();
 	node_queue.pop();
 	construct_tree_recurse(tree->root,&node_queue);
 
-	// cout << "The stack has this in it: " << endl;
-	// while(!stack.empty()){
-	// 	cout << stack.top()->key << endl;
-	// 	stack.pop();
-	// }
 	return tree;
 }
 
