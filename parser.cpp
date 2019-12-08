@@ -52,32 +52,54 @@ int Parser::parse(string filename){
 	cout << "Parsing " << filename << "..." << endl;
 		
 	//Parse tree description
-	string preorder = "fake";
+	string preorder = "2b,1r,f,f,3r,f,f";
 	tree = tree_builder.string_to_tree(preorder);
 
 	//Parse thread counts
-	read_threads = 4;
-	write_threads = 4;
+	read_threads = 10;
+	write_threads = 1;
 
 	//Parse jobs
-	Job j1(job_insert,1);
-	jobs.push_back(j1);
-	Job j2(job_remove,2);
-	jobs.push_back(j2);
-	Job j3(job_search,3);
-	jobs.push_back(j3);
-	Job j4(job_search,4);
-	jobs.push_back(j4);
-	Job j5(job_insert,5);
-	jobs.push_back(j5);
-	Job j6(job_insert,6);
+	// Job j1(job_insert,1);
+	// jobs.push_back(j1);
+	// Job j2(job_insert,2);
+	// jobs.push_back(j2);
+	// Job j3(job_insert,3);
+	// jobs.push_back(j3);
+	// Job j4(job_insert,4);
+	// jobs.push_back(j4);
+	// Job j5(job_insert,5);
+	// jobs.push_back(j5);
+
+	Job j6(job_search,1);
 	jobs.push_back(j6);
-	Job j7(job_remove,7);
+	Job j7(job_search,2);
 	jobs.push_back(j7);
-	Job j8(job_search,8);
+	Job j8(job_search,3);
 	jobs.push_back(j8);
-	Job j9(job_search,9);
+	Job j9(job_search,4);
 	jobs.push_back(j9);
+
+	// Job j10(job_insert,-8);
+	// jobs.push_back(j10);
+	// Job j11(job_insert,-4);
+	// jobs.push_back(j11);
+	// Job j12(job_insert,-3);
+	// jobs.push_back(j12);
+	// Job j13(job_insert,-2);
+	// jobs.push_back(j13);
+	// Job j14(job_insert,-1);
+	// jobs.push_back(j14);
+	// Job j15(job_insert,-9);
+	// jobs.push_back(j15);
+	// Job j16(job_insert,-10);
+	// jobs.push_back(j16);
+	// Job j17(job_insert,-11);
+	// jobs.push_back(j17);
+	// Job j18(job_insert,-12);
+	// jobs.push_back(j18);
+	// Job j19(job_insert,-13);
+	// jobs.push_back(j19);
 
 	return 0;
 }

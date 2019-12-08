@@ -27,6 +27,7 @@ private:
 	void insert_recurse(RedBlackNode *root, RedBlackNode *node);
 	void insert_repair(RedBlackNode *node);
 	bool search_recurse(RedBlackNode *root, int key);
+	friend class TreeBuilder;
 public:
 	RedBlack();
 	int search(int key);

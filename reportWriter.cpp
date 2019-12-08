@@ -5,6 +5,8 @@
 #include <iostream>
 #include <pthread.h>
 #include "parser.h"
+#include "treeBuilder.h"
+
 
 using namespace std;
 
@@ -48,6 +50,10 @@ int ReportWriter::report_tree(RedBlack * tree){
 
 int ReportWriter::print_report(){
 	cout << "Results:\n" << endl;
+
+	cout << treeBuilder.tree_to_string(this->tree) << endl;
+
+	cout << "Elapsed time: " << this->time << endl;
 
 	for(vector<CompletedJob>::iterator iter = completed_jobs.begin(); iter != completed_jobs.end(); iter++){
 		cout << iter->to_string() << endl;

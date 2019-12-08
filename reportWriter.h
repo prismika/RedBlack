@@ -6,6 +6,7 @@
 #include <pthread.h>
 #include "parser.h"
 #include "redBlack.h"
+#include "treeBuilder.h"
 
 using namespace std;
 
@@ -22,10 +23,10 @@ public:
 class ReportWriter{
 private:
 	vector<CompletedJob> completed_jobs;
-	long time;
-	RedBlack *tree;
+	long time = 0;
+	RedBlack *tree = NULL;
 	pthread_mutex_t report_submit_mutex = PTHREAD_MUTEX_INITIALIZER;
-
+	TreeBuilder treeBuilder;
 public:
 	int report_job(Job job, bool success, int thread);
 	int report_time(long time);

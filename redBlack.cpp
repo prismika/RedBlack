@@ -49,7 +49,7 @@ void RedBlack::rotate_left(RedBlackNode *node){
 	if(parent){
 		if(node == parent->left_child){
 			parent->left_child = replacement;
-		}else{
+		}else if (node == parent->right_child){
 			parent->right_child = replacement;
 		}
 	}
@@ -68,10 +68,10 @@ void RedBlack::rotate_right(RedBlackNode *node){
 		node->left_child->parent = node;
 	}
 	if(parent){
-		if(node == parent->right_child){
-			parent->right_child = replacement;
-		}else{
+		if(node == parent->left_child){
 			parent->left_child = replacement;
+		}else if(node == parent->right_child){
+			parent->right_child = replacement;
 		}
 	}
 	replacement->parent = parent;
@@ -102,7 +102,7 @@ void RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
 	}
 	//Node is attached. Set its pointers
 	node->parent = root;
-	node->left_child = NULL; //No children for now
+	node->left_child = NULL;
 	node->right_child = NULL;
 	node->red = true; //Red for now
 }
@@ -113,7 +113,7 @@ void RedBlack::insert_repair(RedBlackNode *node){
 		node->red = false; //Root is black
 	//If node has black parent
 	}else if(!parent_of(node)->red){			//Case 2
-		return;	//All is well
+		//All is well
 	//If node has a red uncle
 	}else if(  sibling_of(parent_of(node))
 			&& sibling_of(parent_of(node))->red){//Case 3

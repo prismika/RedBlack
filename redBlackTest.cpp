@@ -111,14 +111,14 @@ int main(int argc, char *argv[]){
 	//Create threads
 	pthread_t *read_threads = (pthread_t*) malloc(num_read_threads * sizeof(pthread_t));
 	pthread_t *write_threads = (pthread_t*) malloc(num_write_threads * sizeof(pthread_t));
-	for(int i = 0; i < num_read_threads; i++){
-		cout << "Creating reader " <<  i+1 << endl;
-		pthread_create(&read_threads[i], NULL, reader_main, NULL);
-	}
 	for(int i = 0; i < num_write_threads; i++){
 		cout << "Creating writer " << i+1 << endl;
 		pthread_create(&write_threads[i], NULL, writer_main, NULL);
 
+	}
+	for(int i = 0; i < num_read_threads; i++){
+		cout << "Creating reader " <<  i+1 << endl;
+		pthread_create(&read_threads[i], NULL, reader_main, NULL);
 	}
 
 	//Sort jobs into necessary queues
