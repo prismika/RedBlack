@@ -60,16 +60,16 @@ int Parser::parse(string filename){
 	write_threads = 1;
 
 	//Parse jobs
-	// Job j1(job_insert,1);
-	// jobs.push_back(j1);
-	// Job j2(job_insert,2);
-	// jobs.push_back(j2);
-	// Job j3(job_insert,3);
-	// jobs.push_back(j3);
-	// Job j4(job_insert,4);
-	// jobs.push_back(j4);
-	// Job j5(job_insert,5);
-	// jobs.push_back(j5);
+	Job j1(job_insert,1);
+	jobs.push_back(j1);
+	Job j2(job_insert,2);
+	jobs.push_back(j2);
+	Job j3(job_insert,3);
+	jobs.push_back(j3);
+	Job j4(job_insert,4);
+	jobs.push_back(j4);
+	Job j5(job_insert,5);
+	jobs.push_back(j5);
 
 	Job j6(job_search,1);
 	jobs.push_back(j6);
