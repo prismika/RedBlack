@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <pthread.h>
+#include <chrono>
 #include "redBlack.h"
 #include "parser.h"
 #include "reportWriter.h"
@@ -89,6 +90,11 @@ void* writer_main(void* arg){
 
 
 int main(int argc, char *argv[]){
+
+	using namespace std::chrono;
+
+	high_resolution_clock::time_point beginning_time = high_resolution_clock::now();
+
 	if(argc != 2){
 		bad_usage();
 		return -1;
@@ -144,12 +150,12 @@ int main(int argc, char *argv[]){
 
 	// cout << "Waiting on all threads to finish" << endl;
 	pthread_barrier_wait(&finish_line);
-	// long end_time = time();
 
-	// report_writer.report_time(end_time - start_time);
+	high_resolution_clock::time_point ending_time = high_resolution_clock::now();
+	duration<double, std::milli> elapsed = ending_time - beginning_time;
 
+	report_writer.report_time(elapsed.count());
 	report_writer.report_tree(tree);
-
 	report_writer.print_report();
 	
 	return 0;

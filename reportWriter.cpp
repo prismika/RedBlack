@@ -38,7 +38,7 @@ int ReportWriter::report_job(Job job, bool success, int thread){
 	return 0;
 }
 
-int ReportWriter::report_time(long time){
+int ReportWriter::report_time(double time){
 	this->time = time;
 	return 0;
 }
@@ -49,14 +49,18 @@ int ReportWriter::report_tree(RedBlack * tree){
 }
 
 int ReportWriter::print_report(){
+
 	cout << "\nResults:" << endl;
 
-	cout << treeBuilder.tree_to_string(this->tree) << endl;
-
-	cout << "Elapsed time: " << this->time << endl;
+	
+	cout << "Elapsed time: " << this->time << " milliseconds" << endl;
 
 	for(vector<CompletedJob>::iterator iter = completed_jobs.begin(); iter != completed_jobs.end(); iter++){
 		cout << iter->to_string() << endl;
 	}
+
+	cout << treeBuilder.tree_to_string(this->tree) << endl;
+
+
 	return 0;
 }

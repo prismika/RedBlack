@@ -29,7 +29,7 @@ private:
 	TreeBuilder treeBuilder;
 public:
 	int report_job(Job job, bool success, int thread);
-	int report_time(long time);
+	int report_time(double time);
 	int report_tree(RedBlack * tree);
 	int print_report();
 };
