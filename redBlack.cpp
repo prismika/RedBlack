@@ -169,8 +169,7 @@ bool RedBlack::search_recurse(RedBlackNode *root, int key){
 RedBlackNode *RedBlack::remove_recurse(RedBlackNode *root, int key){
 	if(!root){
 		return NULL;
-	}
-	if(root->key == key){
+	}else if(root->key == key){
 		return root;
 	}else if(key < root->key){
 		return remove_recurse(root->left_child, key);
@@ -383,32 +382,31 @@ int RedBlack::remove(int key){
 	before_write();
 
 	RedBlackNode *node = remove_recurse(this->root,key);
-	if(node == NULL){
-		//Key was not found
-		return 1;
-	}
-	//If key was found...
-	//If node has left child,
-	if(node->left_child){
-		RedBlackNode *lefty = node->left_child;
-		while(lefty->right_child){
-			lefty = lefty->right_child;
+	int remove_status = (node == NULL)? 1 : 0;
+	if(remove_status == 0){
+		//If key was found...
+		//If node has left child,
+		if(node->left_child){
+			RedBlackNode *lefty = node->left_child;
+			while(lefty->right_child){
+				lefty = lefty->right_child;
+			}
+			//Lefty is now the next largest element of the tree
+			node->key = lefty->key;
+			//Lefty must have one child
+			remove_node_with_one_child(lefty);
+		//If node has a right child,
+		}else if(node->right_child){
+			RedBlackNode *righty = node->right_child;
+			while(righty->left_child){
+				righty = righty->left_child;
+			}
+			//Righty is now the next smallest element of the tree
+			node->key = righty->key;
+			remove_node_with_one_child(righty);
 		}
-		//Lefty is now the next largest element of the tree
-		node->key = lefty->key;
-		//Lefty must have one child
-		remove_node_with_one_child(lefty);
-	//If node has a right child,
-	}else if(node->right_child){
-		RedBlackNode *righty = node->right_child;
-		while(righty->left_child){
-			righty = righty->left_child;
-		}
-		//Righty is now the next smallest element of the tree
-		node->key = righty->key;
-		remove_node_with_one_child(righty);
 	}
 
 	after_write();
-	return 0;
+	return remove_status;
 }
