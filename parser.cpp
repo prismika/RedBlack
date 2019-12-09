@@ -3,6 +3,7 @@
 #include "treeBuilder.h"
 #include <string>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -49,36 +50,90 @@ string Job::to_string(){
 //				Parser
 //---------------------------------------
 int Parser::parse(string filename){
-	cout << "Parsing " << filename << "..." << endl;
-		
-	//Parse tree description
-	string preorder = "2b,1r,f,f,3r,f,f";
-	tree = tree_builder.string_to_tree(preorder);
+	cout << "Parsing " << filename << endl;
+	ifstream infile(filename);
+	string line = "";
+	read_threads = 0;
+	write_threads = 0;
 
-	//Parse thread counts
-	read_threads = 10;
-	write_threads = 1;
+	//Parse tree description
+	while(getline(infile, line)){
+		if(!line.empty()){
+			cout << "Passing to tree builder: " << line << endl;
+			tree = tree_builder.string_to_tree(line);
+			break;
+		}
+	}
+
+	//Parse read thread count
+	size_t position = 0;
+	while(getline(infile, line)){
+		position = line.find(":");
+		if(position!=string::npos){
+			read_threads = stoi(line.substr(position+1));
+			break;
+		}
+	}
+
+	//Parse write thread count
+	while(getline(infile, line)){
+		cout << "Finding write threads in line: " << line << endl;
+		position = line.find(":");
+		if(position!=string::npos){
+			write_threads = stoi(line.substr(position+1));
+			break;
+		}
+	}
+
+	//Parse jobs (this is messy but it works)
+	do{
+		getline(infile,line);
+	}while(line.empty());
+	size_t new_position = 0;
+	position = 0;
+	while(true){
+		new_position = line.find("(", position);
+		string action = line.substr(position,new_position-position);
+		cout << "Parsed action: " << action << endl;
+		int key = stoi(line.substr(new_position+1));
+		cout << "Parsed key: " << key << endl;
+		position = line.find("||", new_position+1);
+
+		JobAction new_job_action;
+		if(action == "search"){
+			new_job_action = job_search;
+		}else if(action == "insert"){
+			new_job_action = job_insert;
+		}else if(action == "delete"){
+			new_job_action = job_remove;
+		}
+		Job new_job(new_job_action,key);
+		jobs.push_back(new_job);
+
+		if(position == string::npos) break;
+		position += 3;
+	}
 
 	//Parse jobs
-	Job j1(job_insert,1);
-	jobs.push_back(j1);
-	Job j2(job_insert,2);
-	jobs.push_back(j2);
-	Job j3(job_insert,3);
-	jobs.push_back(j3);
-	Job j4(job_insert,4);
-	jobs.push_back(j4);
-	Job j5(job_insert,1);
-	jobs.push_back(j5);
+	// Job j1(job_insert,1);
+	// jobs.push_back(j1);
+	// Job j2(job_insert,2);
+	// jobs.push_back(j2);
+	// Job j3(job_insert,3);
+	// jobs.push_back(j3);
+	// Job j4(job_insert,4);
+	// jobs.push_back(j4);
+	// Job j5(job_insert,1);
+	// jobs.push_back(j5);
 
-	Job j6(job_search,1);
-	jobs.push_back(j6);
-	Job j7(job_search,2);
-	jobs.push_back(j7);
-	Job j8(job_search,3);
-	jobs.push_back(j8);
-	Job j9(job_search,4);
-	jobs.push_back(j9);
+	// Job j6(job_search,1);
+	// jobs.push_back(j6);
+	// Job j7(job_search,2);
+	// jobs.push_back(j7);
+	// Job j8(job_search,3);
+	// jobs.push_back(j8);
+	// Job j9(job_search,4);
+	// jobs.push_back(j9);
 
 	// Job j10(job_insert,-8);
 	// jobs.push_back(j10);

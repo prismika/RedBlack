@@ -40,7 +40,7 @@ int run_job(Job job){
 }
 
 void* reader_main(void* arg){
-	cout << "Reader created" << endl;
+	// cout << "Reader created" << endl;
 	pthread_barrier_wait(&on_your_marks);
 	while(true){
 		//Aquire the mutex
@@ -66,7 +66,7 @@ void* reader_main(void* arg){
 }
 
 void* writer_main(void* arg){
-	cout << "Writer created" << endl;
+	// cout << "Writer created" << endl;
 	pthread_barrier_wait(&on_your_marks);
 	while(true){
 
@@ -96,7 +96,10 @@ int main(int argc, char *argv[]){
 	
 	//TODO Process input string a bit for current directory stuff
 	//Tell parser to parse the specified file
-	parser.parse(argv[1]);
+	string filename = getenv("PWD");
+	filename += "/";
+	filename += argv[1];
+	parser.parse(filename);
 	num_read_threads 	= parser.get_num_readers();
 	num_write_threads	= parser.get_num_writers();
 	jobs 			= parser.get_jobs();
@@ -104,6 +107,8 @@ int main(int argc, char *argv[]){
 
 	//Count threads and create barriers
 	int num_threads_total = num_read_threads+num_write_threads+1;
+	cout << "Read threads: " << num_read_threads << endl;
+	cout << "Write threads: " << num_write_threads << endl;
 	cout << "Total threads: " << num_threads_total << endl;
 	pthread_barrier_init(&on_your_marks,NULL,num_threads_total);
 	pthread_barrier_init(&finish_line,NULL,num_threads_total);
@@ -112,22 +117,22 @@ int main(int argc, char *argv[]){
 	pthread_t *read_threads = (pthread_t*) malloc(num_read_threads * sizeof(pthread_t));
 	pthread_t *write_threads = (pthread_t*) malloc(num_write_threads * sizeof(pthread_t));
 	for(int i = 0; i < num_write_threads; i++){
-		cout << "Creating writer " << i+1 << endl;
+		// cout << "Creating writer " << i+1 << endl;
 		pthread_create(&write_threads[i], NULL, writer_main, NULL);
 
 	}
 	for(int i = 0; i < num_read_threads; i++){
-		cout << "Creating reader " <<  i+1 << endl;
+		// cout << "Creating reader " <<  i+1 << endl;
 		pthread_create(&read_threads[i], NULL, reader_main, NULL);
 	}
 
 	//Sort jobs into necessary queues
 	for(vector<Job>::iterator iter = jobs.begin(); iter != jobs.end(); iter++){
 		if(iter->get_action() == job_search){
-			cout << "Placing job: " << iter->to_string() << " in reader queue." << endl;
+			// cout << "Placing job: " << iter->to_string() << " in reader queue." << endl;
 			readers_queue.push(*iter);
 		}else{
-			cout << "Placing job: " << iter->to_string() << " in writer queue." << endl;
+			// cout << "Placing job: " << iter->to_string() << " in writer queue." << endl;
 			writers_queue.push(*iter);
 		}
 	}
