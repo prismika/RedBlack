@@ -86,32 +86,36 @@ int Parser::parse(string filename){
 	}
 
 	//Parse jobs (this is messy but it works)
-	do{
-		getline(infile,line);
-	}while(line.empty());
-	size_t new_position = 0;
-	position = 0;
-	while(true){
-		new_position = line.find("(", position);
-		string action = line.substr(position,new_position-position);
-		cout << "Parsed action: " << action << endl;
-		int key = stoi(line.substr(new_position+1));
-		cout << "Parsed key: " << key << endl;
-		position = line.find("||", new_position+1);
+	// do{
+	// 	getline(infile,line);
+	// }while(line.empty());
 
-		JobAction new_job_action;
-		if(action == "search"){
-			new_job_action = job_search;
-		}else if(action == "insert"){
-			new_job_action = job_insert;
-		}else if(action == "delete"){
-			new_job_action = job_remove;
+	while(getline(infile,line)){
+		if(line.empty()) continue;
+		size_t new_position = 0;
+		position = 0;
+		while(true){
+			new_position = line.find("(", position);
+			string action = line.substr(position,new_position-position);
+			cout << "Parsed action: " << action << endl;
+			int key = stoi(line.substr(new_position+1));
+			cout << "Parsed key: " << key << endl;
+			position = line.find("||", new_position+1);
+
+			JobAction new_job_action;
+			if(action == "search"){
+				new_job_action = job_search;
+			}else if(action == "insert"){
+				new_job_action = job_insert;
+			}else if(action == "delete"){
+				new_job_action = job_remove;
+			}
+			Job new_job(new_job_action,key);
+			jobs.push_back(new_job);
+
+			if(position == string::npos) break;
+			position += 3;
 		}
-		Job new_job(new_job_action,key);
-		jobs.push_back(new_job);
-
-		if(position == string::npos) break;
-		position += 3;
 	}
 
 	//Parse jobs
