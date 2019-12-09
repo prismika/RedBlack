@@ -77,7 +77,6 @@ void RedBlack::rotate_right(RedBlackNode *node){
 }
 
 int RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
-	if(node->key == root->key) return -1;
 	//If root is not a leaf and root's key is too large
 	if(root && node->key < root->key){
 		//If root has a left child
@@ -89,7 +88,7 @@ int RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
 			root->left_child = node;
 		}
 	//If root is not a leaf but it's key is not too large,
-	}else if(root){
+	}else if(root && node->key > root->key){
 		//If root has a right child
 		if(root->right_child){
 			//recurse on that child
@@ -97,6 +96,9 @@ int RedBlack::insert_recurse(RedBlackNode *root, RedBlackNode *node){
 		}else{
 			root->right_child = node;
 		}
+	}else if(root){
+		//Root's key matches node's key. It's a setup. Get outta there.
+		return -1;
 	}
 	//Node is attached. Set its pointers
 	node->parent = root;
@@ -157,9 +159,142 @@ bool RedBlack::search_recurse(RedBlackNode *root, int key){
 	}
 	if(root->key == key){
 		return true;
+	}else if(key < root->key){
+		return search_recurse(root->left_child, key);
 	}else{
-		return search_recurse(root->left_child, key)
-		|| search_recurse(root->right_child, key);
+		return search_recurse(root->right_child, key);
+	}
+}
+
+RedBlackNode *RedBlack::remove_recurse(RedBlackNode *root, int key){
+	if(!root){
+		return NULL;
+	}
+	if(root->key == key){
+		return root;
+	}else if(key < root->key){
+		return remove_recurse(root->left_child, key);
+	}else{
+		return remove_recurse(root->right_child, key);
+	}
+}
+
+//Put child where node currently is in the tree
+void RedBlack::replace_node(RedBlackNode *node, RedBlackNode *child){
+	child->parent = node->parent;
+	//If node is a left child
+	if(node == node->parent->left_child){
+		node->parent->left_child = child;
+	//If node is right child
+	}else{
+		node->parent->right_child = child;
+	}
+}
+
+void RedBlack::remove_node_with_one_child(RedBlackNode *node){
+	RedBlackNode* chosen_child;
+	if(node->right_child == NULL){
+		chosen_child = node->left_child;
+	}else{
+		chosen_child = node->right_child;
+	}
+
+	replace_node(node, chosen_child);
+	if(!node->red){
+		//If node is black and child is red
+		if(chosen_child->red){
+			//recolor it to black
+			chosen_child->red = false;
+		}else{
+			remove_case_1(chosen_child);
+		}
+	}
+}
+
+void RedBlack::remove_case_1(RedBlackNode *node){
+	//If child is now the root, we are done
+	if(!node->parent){
+		return;
+	}
+	remove_case_2(node);
+}
+
+void RedBlack::remove_case_2(RedBlackNode *node){
+	RedBlackNode *sibling = sibling_of(node);
+	if(sibling->red){
+		node->parent->red = true;
+		sibling->red = false;
+		if(node == node->parent->left_child){
+			rotate_left(node->parent);
+		}else{
+			rotate_right(node->parent);
+		}
+	}
+	remove_case_3(node);
+}
+
+void RedBlack::remove_case_3(RedBlackNode *node){
+	RedBlackNode *sibling = sibling_of(node);
+	//If parent, sibling, and both nephews are black
+	if(!node->parent->red
+		&& !sibling->red
+		&& !sibling->left_child->red
+		&& !sibling->right_child->red){
+		sibling->red = true;
+		remove_case_1(node->parent);
+	}else{
+		remove_case_4(node);
+	}
+}
+
+void RedBlack::remove_case_4(RedBlackNode *node){
+	RedBlackNode *sibling = sibling_of(node);
+	//If parent is red, and sibling and its kids are black
+	if(node->parent->red
+		&& !sibling->red
+		&& !sibling->left_child->red
+		&& !sibling->right_child->red){
+		sibling->red = true;
+		node->parent->red = false;
+	}else{
+		remove_case_5(node);
+	}
+}
+
+void RedBlack::remove_case_5(RedBlackNode *node){
+	RedBlackNode *sibling = sibling_of(node);
+	if(!sibling->red){
+		//If node is a left child,
+		//and the sibling's left child is the only red one
+		if((node == node->parent->left_child)
+			&& !(sibling->right_child->red)
+			&& (sibling->left_child->red)){
+			sibling->red = true;
+			sibling->left_child->red = false;
+			rotate_right(sibling);
+		}else if((node == node->parent->right_child)
+			&& !(sibling->left_child->red)
+			&& (sibling->right_child->red)){
+			sibling->red = true;
+			sibling->right_child->red = false;
+			rotate_left(sibling);
+		}
+	}
+	remove_case_6(node);
+}
+
+
+void RedBlack::remove_case_6(RedBlackNode *node){
+	RedBlackNode *sibling = sibling_of(node);
+	sibling->red = node->parent->red;
+	node->parent->red = false;
+
+	if(node == node->parent->left_child){
+		sibling->right_child->red = false;
+		rotate_left(node->parent);
+	}else{
+		sibling->left_child->red = false;
+		rotate_right(node->parent);
 	}
 }
 
@@ -247,9 +382,33 @@ int RedBlack::insert(int key){
 int RedBlack::remove(int key){
 	before_write();
 
-	// cout << "M: Remove" << endl;
-	sleep(1);
-	
+	RedBlackNode *node = remove_recurse(this->root,key);
+	if(node == NULL){
+		//Key was not found
+		return 1;
+	}
+	//If key was found...
+	//If node has left child,
+	if(node->left_child){
+		RedBlackNode *lefty = node->left_child;
+		while(lefty->right_child){
+			lefty = lefty->right_child;
+		}
+		//Lefty is now the next largest element of the tree
+		node->key = lefty->key;
+		//Lefty must have one child
+		remove_node_with_one_child(lefty);
+	//If node has a right child,
+	}else if(node->right_child){
+		RedBlackNode *righty = node->right_child;
+		while(righty->left_child){
+			righty = righty->left_child;
+		}
+		//Righty is now the next smallest element of the tree
+		node->key = righty->key;
+		remove_node_with_one_child(righty);
+	}
+
 	after_write();
 	return 0;
 }

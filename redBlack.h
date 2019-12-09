@@ -27,6 +27,15 @@ private:
 	int insert_recurse(RedBlackNode *root, RedBlackNode *node);
 	void insert_repair(RedBlackNode *node);
 	bool search_recurse(RedBlackNode *root, int key);
+	RedBlackNode *remove_recurse(RedBlackNode *root, int key);
+	void replace_node(RedBlackNode *node, RedBlackNode *child);
+	void remove_node_with_one_child(RedBlackNode *node);
+	void remove_case_1(RedBlackNode *node);
+	void remove_case_2(RedBlackNode *node);
+	void remove_case_3(RedBlackNode *node);
+	void remove_case_4(RedBlackNode *node);
+	void remove_case_5(RedBlackNode *node);
+	void remove_case_6(RedBlackNode *node);
 	friend class TreeBuilder;
 public:
 	RedBlack();

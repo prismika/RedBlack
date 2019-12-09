@@ -37,7 +37,7 @@ void TreeBuilder::construct_tree_recurse(RedBlackNode *root, queue<RedBlackNode*
 		right_node->parent = root;
 	}
 	root->right_child = right_node;
-	construct_tree_recurse(left_node, node_queue);
+	construct_tree_recurse(right_node, node_queue);
 }
 
 RedBlack *TreeBuilder::string_to_tree(string str){
