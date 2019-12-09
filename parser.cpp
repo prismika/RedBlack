@@ -46,9 +46,12 @@ string Job::to_string(){
 	ret += ")";
 	return ret;
 }
+
+
 //---------------------------------------
 //				Parser
 //---------------------------------------
+
 int Parser::parse(string filename){
 	cout << "Parsing " << filename << endl;
 	ifstream infile(filename);
@@ -59,7 +62,7 @@ int Parser::parse(string filename){
 	//Parse tree description
 	while(getline(infile, line)){
 		if(!line.empty()){
-			cout << "Passing to tree builder: " << line << endl;
+			// cout << "Passing to tree builder: " << line << endl;
 			tree = tree_builder.string_to_tree(line);
 			break;
 		}
@@ -77,18 +80,13 @@ int Parser::parse(string filename){
 
 	//Parse write thread count
 	while(getline(infile, line)){
-		cout << "Finding write threads in line: " << line << endl;
+		// cout << "Finding write threads in line: " << line << endl;
 		position = line.find(":");
 		if(position!=string::npos){
 			write_threads = stoi(line.substr(position+1));
 			break;
 		}
 	}
-
-	//Parse jobs (this is messy but it works)
-	// do{
-	// 	getline(infile,line);
-	// }while(line.empty());
 
 	while(getline(infile,line)){
 		if(line.empty()) continue;
@@ -97,9 +95,9 @@ int Parser::parse(string filename){
 		while(true){
 			new_position = line.find("(", position);
 			string action = line.substr(position,new_position-position);
-			cout << "Parsed action: " << action << endl;
+			// cout << "Parsed action: " << action << endl;
 			int key = stoi(line.substr(new_position+1));
-			cout << "Parsed key: " << key << endl;
+			// cout << "Parsed key: " << key << endl;
 			position = line.find("||", new_position+1);
 
 			JobAction new_job_action;
@@ -117,49 +115,6 @@ int Parser::parse(string filename){
 			position += 3;
 		}
 	}
-
-	//Parse jobs
-	// Job j1(job_insert,1);
-	// jobs.push_back(j1);
-	// Job j2(job_insert,2);
-	// jobs.push_back(j2);
-	// Job j3(job_insert,3);
-	// jobs.push_back(j3);
-	// Job j4(job_insert,4);
-	// jobs.push_back(j4);
-	// Job j5(job_insert,1);
-	// jobs.push_back(j5);
-
-	// Job j6(job_search,1);
-	// jobs.push_back(j6);
-	// Job j7(job_search,2);
-	// jobs.push_back(j7);
-	// Job j8(job_search,3);
-	// jobs.push_back(j8);
-	// Job j9(job_search,4);
-	// jobs.push_back(j9);
-
-	// Job j10(job_insert,-8);
-	// jobs.push_back(j10);
-	// Job j11(job_insert,-4);
-	// jobs.push_back(j11);
-	// Job j12(job_insert,-3);
-	// jobs.push_back(j12);
-	// Job j13(job_insert,-2);
-	// jobs.push_back(j13);
-	// Job j14(job_insert,-1);
-	// jobs.push_back(j14);
-	// Job j15(job_insert,-9);
-	// jobs.push_back(j15);
-	// Job j16(job_insert,-10);
-	// jobs.push_back(j16);
-	// Job j17(job_insert,-11);
-	// jobs.push_back(j17);
-	// Job j18(job_insert,-12);
-	// jobs.push_back(j18);
-	// Job j19(job_insert,-13);
-	// jobs.push_back(j19);
-
 	return 0;
 }
 

@@ -53,7 +53,7 @@ RedBlack *TreeBuilder::string_to_tree(string str){
 		string token = str.substr(str_position, new_str_position - str_position);
 		str_position = new_str_position+1;
 
-		cout << "Got token " << token << endl;
+		// cout << "Got token " << token << endl;
 
 		// Create a new node from the token
 		RedBlackNode *new_node;
@@ -63,12 +63,12 @@ RedBlack *TreeBuilder::string_to_tree(string str){
 			new_node -> left_child = NULL;
 			new_node -> right_child = NULL;
 			new_node -> red = (token.find("r") != string::npos);
-			cout << "Constructed node with key " << new_node -> key
-				<< ", color " << (new_node->red ? "red" : "black")
-				<< endl;
+			// cout << "Constructed node with key " << new_node -> key
+			// 	<< ", color " << (new_node->red ? "red" : "black")
+			// 	<< endl;
 		}else{
 			new_node = NULL;
-			cout << "Constructed null node." << endl;
+			// cout << "Constructed null node." << endl;
 		}
 		node_queue.push(new_node);
 	}

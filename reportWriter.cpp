@@ -33,7 +33,7 @@ int ReportWriter::report_job(Job job, bool success, int thread){
 
 	pthread_mutex_lock(&report_submit_mutex);
 	completed_jobs.push_back(new_job);
-	cout << "Job reported: " << new_job.to_string() << endl;
+	// cout << "Job reported: " << new_job.to_string() << endl;
 	pthread_mutex_unlock(&report_submit_mutex);
 	return 0;
 }
@@ -49,7 +49,7 @@ int ReportWriter::report_tree(RedBlack * tree){
 }
 
 int ReportWriter::print_report(){
-	cout << "Results:\n" << endl;
+	cout << "\nResults:" << endl;
 
 	cout << treeBuilder.tree_to_string(this->tree) << endl;
 

@@ -139,10 +139,10 @@ int main(int argc, char *argv[]){
 
 	// long start_time = time();
 
-	cout << "Preparing to release all threads..." << endl;
+	// cout << "Preparing to release all threads..." << endl;
 	pthread_barrier_wait(&on_your_marks);
 
-	cout << "Waiting on all threads to finish" << endl;
+	// cout << "Waiting on all threads to finish" << endl;
 	pthread_barrier_wait(&finish_line);
 	// long end_time = time();
 

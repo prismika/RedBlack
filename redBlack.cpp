@@ -6,7 +6,6 @@
 using namespace std;
 
 RedBlack::RedBlack(){
-	cout << "Creating a red black tree." << endl;
 	root = NULL;
 }
 
